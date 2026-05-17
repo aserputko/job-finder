@@ -14,8 +14,8 @@ build/
 !.env.example
 
 # Personal data — never commit
-cv/master.md
-cv/cover-letter.md
+# cv/master.md
+# cv/cover-letter.md
 cv/tailored/
 cv/build/
 cv/*.pdf
