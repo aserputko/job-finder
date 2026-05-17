@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Personal data — never commit
+cv/master.md
+cv/cover-letter.md
+cv/tailored/
+cv/build/
+cv/*.pdf
+cv/*.docx
+
+# Scraped / generated data
+data/jobs/
+data/reports/
+!data/reports/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
