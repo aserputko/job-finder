@@ -22,8 +22,8 @@ cv/*.pdf
 cv/*.docx
 
 # Scraped / generated data
-data/jobs/
-data/reports/
+# data/jobs/
+# data/reports/
 !data/reports/.gitkeep
 
 # Logs
