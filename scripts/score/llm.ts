@@ -2,16 +2,16 @@ import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { LLM_API_KEY, LLM_MODEL, LLM_PROVIDER } from '../config.ts';
 
-let openaiClient: OpenAI | null = null;
-let anthropicClient: Anthropic | null = null;
+let openaiClient: OpenAI | undefined;
+let anthropicClient: Anthropic | undefined;
 
 function getOpenAI(): OpenAI {
-  if (!openaiClient) openaiClient = new OpenAI({ apiKey: LLM_API_KEY });
+  openaiClient ??= new OpenAI({ apiKey: LLM_API_KEY });
   return openaiClient;
 }
 
 function getAnthropic(): Anthropic {
-  if (!anthropicClient) anthropicClient = new Anthropic({ apiKey: LLM_API_KEY });
+  anthropicClient ??= new Anthropic({ apiKey: LLM_API_KEY });
   return anthropicClient;
 }
 
@@ -27,7 +27,7 @@ export async function llm(prompt: string): Promise<string> {
       messages: [{ role: 'user', content: prompt }],
     });
     const first = res.content[0];
-    if (first && first.type === 'text') return first.text;
+    if (first?.type === 'text') return first.text;
     return '';
   }
 
@@ -37,5 +37,5 @@ export async function llm(prompt: string): Promise<string> {
     messages: [{ role: 'user', content: prompt }],
     response_format: { type: 'json_object' },
   });
-  return res.choices[0]?.message?.content ?? '';
+  return res.choices[0]?.message.content ?? '';
 }

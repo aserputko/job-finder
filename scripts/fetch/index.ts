@@ -18,7 +18,7 @@ export async function runAllFetchers(): Promise<Job[]> {
   const results = await Promise.allSettled(
     Object.entries(FETCHERS).map(async ([name, fn]) => {
       const jobs = await fn();
-      console.log(`[${name}] fetched ${jobs.length} jobs`);
+      console.log(`[${name}] fetched ${String(jobs.length)} jobs`);
       return jobs;
     }),
   );

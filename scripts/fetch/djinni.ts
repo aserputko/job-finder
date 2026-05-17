@@ -14,7 +14,7 @@ export async function fetch(): Promise<Job[]> {
   try {
     const res = await httpGet(LIST, { headers: { accept: 'text/html' } });
     if (!res.ok) {
-      console.error(`[djinni] HTTP ${res.status}`);
+      console.error(`[djinni] HTTP ${String(res.status)}`);
       return [];
     }
     const html = await res.text();
@@ -33,12 +33,12 @@ export async function fetch(): Promise<Job[]> {
       const t = titleRe.exec(block);
       if (!t) continue;
       const href = t[1] ?? '';
-      const title = (t[2] ?? '').replace(/<[^>]+>/g, '').trim();
+      const title = (t[2] ?? '').replaceAll(/<[^>]+>/g, '').trim();
       const url = href.startsWith('http') ? href : `${BASE}${href}`;
-      const company = (companyRe.exec(block)?.[1] ?? 'Unknown').replace(/<[^>]+>/g, '').trim();
+      const company = (companyRe.exec(block)?.[1] ?? 'Unknown').replaceAll(/<[^>]+>/g, '').trim();
       const salary = salaryRe
         .exec(block)?.[1]
-        ?.replace(/<[^>]+>/g, '')
+        ?.replaceAll(/<[^>]+>/g, '')
         .trim();
 
       const job: Job = {
@@ -50,8 +50,8 @@ export async function fetch(): Promise<Job[]> {
         location: 'Remote',
         postedAt: new Date().toISOString(),
         description: block
-          .replace(/<[^>]+>/g, ' ')
-          .replace(/\s+/g, ' ')
+          .replaceAll(/<[^>]+>/g, ' ')
+          .replaceAll(/\s+/g, ' ')
           .trim()
           .slice(0, 4000),
         salary,
@@ -62,12 +62,13 @@ export async function fetch(): Promise<Job[]> {
 
     await delay(1000);
     return jobs;
-  } catch (err) {
-    console.error('[djinni] fetch failed:', err);
+  } catch (error) {
+    console.error('[djinni] fetch failed:', error);
     return [];
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  fetch().then((j) => console.log(JSON.stringify(j, null, 2)));
+if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
+  const j = await fetch();
+  console.log(JSON.stringify(j, undefined, 2));
 }

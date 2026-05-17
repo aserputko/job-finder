@@ -62,7 +62,9 @@ export async function scoreJobs(jobs: Job[], cvText: string): Promise<ScoredJob[
     const batch = jobs.slice(i, i + BATCH_SIZE);
     const scored = await Promise.all(batch.map((j) => scoreOne(j, cvText)));
     out.push(...scored);
-    console.log(`[score] ${Math.min(i + BATCH_SIZE, jobs.length)} / ${jobs.length}`);
+    console.log(
+      `[score] ${String(Math.min(i + BATCH_SIZE, jobs.length))} / ${String(jobs.length)}`,
+    );
     if (i + BATCH_SIZE < jobs.length) await delay(BATCH_DELAY_MS);
   }
 

@@ -10,11 +10,12 @@
  */
 import type { Job } from '../types.ts';
 
-export async function fetch(): Promise<Job[]> {
+export function fetch(): Promise<Job[]> {
   console.warn('[linkedin] fetcher is a stub — returns []. See TODO in scripts/fetch/linkedin.ts');
-  return [];
+  return Promise.resolve([]);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  fetch().then((j) => console.log(JSON.stringify(j, null, 2)));
+if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
+  const j = await fetch();
+  console.log(JSON.stringify(j, undefined, 2));
 }

@@ -16,11 +16,11 @@ interface NfjPosting {
   url?: string;
   posted?: number;
   location?: {
-    places?: Array<{
+    places?: {
       city?: string;
       country?: { code?: string };
       remote?: boolean;
-    }>;
+    }[];
   };
   salary?: { from?: number; to?: number; currency?: string; type?: string };
   technology?: string;
@@ -33,7 +33,7 @@ export async function fetch(): Promise<Job[]> {
   try {
     const res = await httpGet(API, { headers: { accept: 'application/json' } });
     if (!res.ok) {
-      console.error(`[nofluffjobs] HTTP ${res.status}`);
+      console.error(`[nofluffjobs] HTTP ${String(res.status)}`);
       return [];
     }
     const data = (await res.json()) as { postings?: NfjPosting[] };
@@ -58,7 +58,7 @@ export async function fetch(): Promise<Job[]> {
       ].join('\n');
 
       const salary = p.salary
-        ? `${p.salary.from ?? ''}-${p.salary.to ?? ''} ${p.salary.currency ?? ''} ${p.salary.type ?? ''}`.trim()
+        ? `${p.salary.from?.toString() ?? ''}-${p.salary.to?.toString() ?? ''} ${p.salary.currency ?? ''} ${p.salary.type ?? ''}`.trim()
         : undefined;
 
       const job: Job = {
@@ -78,12 +78,13 @@ export async function fetch(): Promise<Job[]> {
 
     await delay(1000);
     return jobs;
-  } catch (err) {
-    console.error('[nofluffjobs] fetch failed:', err);
+  } catch (error) {
+    console.error('[nofluffjobs] fetch failed:', error);
     return [];
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  fetch().then((j) => console.log(JSON.stringify(j, null, 2)));
+if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
+  const j = await fetch();
+  console.log(JSON.stringify(j, undefined, 2));
 }

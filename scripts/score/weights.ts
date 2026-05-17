@@ -8,9 +8,9 @@ export const WEIGHTS = {
 
 export const WEIGHTS_DESCRIPTION = `
 Scoring weights (sum to 1.0):
-- tech-stack overlap (React / TypeScript / Node.js / NestJS / AWS): ${WEIGHTS.techStack * 100}%
-- seniority fit (Senior / Lead): ${WEIGHTS.seniority * 100}%
-- location & remote policy: ${WEIGHTS.location * 100}%
-- compensation match (>= target): ${WEIGHTS.compensation * 100}%
-- industry / deal-breakers: ${WEIGHTS.industry * 100}%
+- tech-stack overlap (React / TypeScript / Node.js / NestJS / AWS): ${String(WEIGHTS.techStack * 100)}%
+- seniority fit (Senior / Lead): ${String(WEIGHTS.seniority * 100)}%
+- location & remote policy: ${String(WEIGHTS.location * 100)}%
+- compensation match (>= target): ${String(WEIGHTS.compensation * 100)}%
+- industry / deal-breakers: ${String(WEIGHTS.industry * 100)}%
 `.trim();

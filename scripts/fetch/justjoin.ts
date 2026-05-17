@@ -17,12 +17,12 @@ interface JjitOffer {
   workplaceType?: string;
   remoteInterview?: boolean;
   publishedAt?: string;
-  employmentTypes?: Array<{
+  employmentTypes?: {
     type?: string;
     from?: number;
     to?: number;
     currency?: string;
-  }>;
+  }[];
   requiredSkills?: string[];
   experienceLevel?: string;
   body?: string;
@@ -34,7 +34,7 @@ export async function fetch(): Promise<Job[]> {
       headers: { accept: 'application/json', version: '2' },
     });
     if (!res.ok) {
-      console.error(`[justjoin] HTTP ${res.status}`);
+      console.error(`[justjoin] HTTP ${String(res.status)}`);
       return [];
     }
     const data = (await res.json()) as { data?: JjitOffer[] };
@@ -49,7 +49,10 @@ export async function fetch(): Promise<Job[]> {
       const location = isRemote ? 'Remote' : (o.city ?? 'Unknown');
 
       const salary = o.employmentTypes
-        ?.map((e) => `${e.type}: ${e.from ?? ''}-${e.to ?? ''} ${e.currency ?? ''}`)
+        ?.map(
+          (e) =>
+            `${e.type ?? ''}: ${e.from?.toString() ?? ''}-${e.to?.toString() ?? ''} ${e.currency ?? ''}`,
+        )
         .join('; ');
 
       const description = [
@@ -75,12 +78,13 @@ export async function fetch(): Promise<Job[]> {
 
     await delay(1000);
     return jobs;
-  } catch (err) {
-    console.error('[justjoin] fetch failed:', err);
+  } catch (error) {
+    console.error('[justjoin] fetch failed:', error);
     return [];
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  fetch().then((j) => console.log(JSON.stringify(j, null, 2)));
+if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
+  const j = await fetch();
+  console.log(JSON.stringify(j, undefined, 2));
 }

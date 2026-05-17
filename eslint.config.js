@@ -2,7 +2,6 @@
 import js from '@eslint/js';
 import importX from 'eslint-plugin-import-x';
 import pluginN from 'eslint-plugin-n';
-import unicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -23,9 +22,6 @@ export default tseslint.config(
   // ── Plugin: import-x ─────────────────────────────────────────────────────
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
-
-  // ── Plugin: unicorn (modern JS best-practices) ────────────────────────────
-  unicorn.configs['flat/recommended'],
 
   // ── Project-wide settings ─────────────────────────────────────────────────
   {
