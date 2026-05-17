@@ -22,10 +22,10 @@ jobs:
 
       - name: Run daily report
         env:
-          LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'openai' }}
-          LLM_MODEL: ${{ vars.LLM_MODEL || 'gpt-4o-mini' }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'openai' }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL || 'gpt-4o-mini' }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          SCORE_THRESHOLD: ${{ vars.SCORE_THRESHOLD || '70' }}
+          SCORE_THRESHOLD: ${{ secrets.SCORE_THRESHOLD || '70' }}
         run: npm run report
 
       - name: Commit report
