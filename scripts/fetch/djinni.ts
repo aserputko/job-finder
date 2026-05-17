@@ -20,20 +20,30 @@ export async function fetch(): Promise<Job[]> {
     const html = await res.text();
 
     const jobs: Job[] = [];
-    // Each posting is rendered as <li class="list-jobs__item ..."> with an <a class="job-item__title-link" href="/jobs/123/">
-    const itemRe = /<li[^>]*class="[^"]*list-jobs__item[^"]*"[^>]*>([\s\S]*?)<\/li>/gi;
-    const titleRe =
-      /<a[^>]*class="[^"]*job-item__title-link[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i;
-    const companyRe = /<a[^>]*class="[^"]*mr-2[^"]*"[^>]*>([\s\S]*?)<\/a>/i;
-    const salaryRe = /<span[^>]*class="[^"]*public-salary-item[^"]*"[^>]*>([\s\S]*?)<\/span>/i;
-
+    // Each posting is rendered as <div id="job-item-{id}" class="job-item ...">
+    // Split HTML into per-job blocks using the id attribute as a delimiter.
+    const idRe = /id="job-item-(\d+)"/g;
+    const positions: Array<{ start: number }> = [];
     let m: RegExpExecArray | null;
-    while ((m = itemRe.exec(html)) !== null) {
-      const block = m[1] ?? '';
-      const t = titleRe.exec(block);
-      if (!t) continue;
-      const href = t[1] ?? '';
-      const title = (t[2] ?? '').replaceAll(/<[^>]+>/g, '').trim();
+    while ((m = idRe.exec(html)) !== null) {
+      positions.push({ start: m.index });
+    }
+
+    const hrefRe = /href="(\/jobs\/[^"]+)"/i;
+    const titleRe = /<h2[^>]*class="[^"]*job-item__position[^"]*"[^>]*>([\s\S]*?)<\/h2>/i;
+    const companyRe = /<span[^>]*class="[^"]*text-gray-800[^"]*"[^>]*>([\s\S]*?)<\/span>/i;
+    const salaryRe =
+      /<span[^>]*class="[^"]*text-body-tertiary fw-medium[^"]*"[^>]*data-toggle="tooltip"[^>]*>([\s\S]*?)<\/span>/i;
+
+    for (let i = 0; i < positions.length; i++) {
+      const start = positions[i].start ?? 0;
+      const end = positions[i + 1]?.start ?? html.length;
+      const block = html.slice(start, end);
+
+      const href = hrefRe.exec(block)?.[1] ?? '';
+      const title = (titleRe.exec(block)?.[1] ?? '').replaceAll(/<[^>]+>/g, '').trim();
+      if (!href || !title) continue;
+
       const url = href.startsWith('http') ? href : `${BASE}${href}`;
       const company = (companyRe.exec(block)?.[1] ?? 'Unknown').replaceAll(/<[^>]+>/g, '').trim();
       const salary = salaryRe
