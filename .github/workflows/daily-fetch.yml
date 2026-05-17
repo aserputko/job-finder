@@ -1,0 +1,37 @@
+name: daily-fetch
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Run daily report
+        env:
+          LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'openai' }}
+          LLM_MODEL: ${{ vars.LLM_MODEL || 'gpt-4o-mini' }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          SCORE_THRESHOLD: ${{ vars.SCORE_THRESHOLD || '70' }}
+        run: npm run report
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/reports/ || true
+          git diff --cached --quiet || git commit -m "chore: daily report $(date -u +%F)"
+          git push || true
