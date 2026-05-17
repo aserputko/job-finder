@@ -1,0 +1,78 @@
+/* CV stylesheet — matches Andrii_Serputko_CV_2025.pdf styling */
+
+@page {
+  margin: 18mm 18mm 18mm 18mm;
+}
+
+body {
+  font-family: 'Calibri', 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 11pt;
+  line-height: 1.35;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Name */
+h1 {
+  font-size: 26pt;
+  font-weight: 700;
+  color: #1f3864; /* Word dark blue */
+  margin: 0 0 4pt 0;
+  line-height: 1.1;
+}
+
+/* Headline / role */
+h2 {
+  font-size: 14pt;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4pt 0;
+}
+
+/* Section headings: Summary, Technical Skills, ... */
+h3 {
+  font-size: 14pt;
+  font-weight: 400;
+  color: #2e74b5; /* Word accent blue */
+  margin: 16pt 0 6pt 0;
+  padding-bottom: 2pt;
+}
+
+/* Company / school */
+h4 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 10pt 0 0 0;
+}
+
+/* Job title row */
+h4 + p strong {
+  font-weight: 700;
+}
+
+p {
+  margin: 2pt 0 4pt 0;
+}
+
+ul {
+  margin: 4pt 0 6pt 0;
+  padding-left: 18pt;
+}
+
+li {
+  margin: 2pt 0;
+}
+
+strong {
+  color: #1a1a1a;
+}
+
+a {
+  color: #2e74b5;
+  text-decoration: none;
+}
+
+hr {
+  display: none;
+}

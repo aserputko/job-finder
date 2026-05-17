@@ -1,16 +1,16 @@
 import type { Job } from '../types.ts';
 import { fetch as fetchDjinni } from './djinni.ts';
 import { fetch as fetchDou } from './dou.ts';
-// import { fetch as fetchJustjoin } from './justjoin.ts';
-// import { fetch as fetchLinkedin } from './linkedin.ts';
+import { fetch as fetchJustjoin } from './justjoin.ts';
+import { fetch as fetchLinkedin } from './linkedin.ts';
 // import { fetch as fetchNoFluffJobs } from './nofluffjobs.ts';
 
 export const FETCHERS = {
-  //   nofluffjobs: fetchNoFluffJobs,
-  //   'justjoin.it': fetchJustjoin,
+  // nofluffjobs: fetchNoFluffJobs,
+  'justjoin.it': fetchJustjoin,
   djinni: fetchDjinni,
   dou: fetchDou,
-  //   linkedin: fetchLinkedin,
+  linkedin: fetchLinkedin,
 } as const;
 
 /** Runs every registered fetcher in parallel and concatenates results. */
